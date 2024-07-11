@@ -34,7 +34,7 @@ app.post("/api/convert/rmtp", (req, res) => {
 
   if (!rtmpUrl || !rtspUrl) {
     return res.status(400).json({ error: "Missing RTMP or RTSP URL" });
-  }
+  } 
 
   const ffmpegCommand = `${ffmpegPath} -i ${rtmpUrl} -c:v copy -c:a copy -f rtsp ${rtspUrl}`;
 
@@ -61,12 +61,13 @@ app.post("/api/convert/rmtp", (req, res) => {
     }
   });
 
-  
-  
+
+
+
   const options = {
     name: "streamName",
     url: rtspUrl,
-    wsPort: 3001,
+    wsPort: 9999,
   };
   
   const stream = new Stream(options);
@@ -139,19 +140,17 @@ process.stderr.on("data", (data) => {
 process.on("close", (code) => {
   console.log(`FFmpeg process exited with code ${code}`);
 });
-
-
+    if (error) throw error;
   process.on("close", (code) => {
     if (code === 0) {
       res.status(200).json({ message: "Conversion successful" });
     } else {
-      res.status(500).json({ error: "Conversion failed", details: errorData });
-    }
+      res.status(500).json({ error: "Conversion failed", details: code });
+    } 
   });
 
   res.status(200).json({ error: "Conversion Success", });
 });
-
 
 const PORT = 5000;
 app.listen(PORT, () => {

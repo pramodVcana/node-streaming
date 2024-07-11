@@ -140,7 +140,7 @@ process.stderr.on("data", (data) => {
 process.on("close", (code) => {
   console.log(`FFmpeg process exited with code ${code}`);
 });
-    if (error) throw error;
+    // if (error) throw error;
   process.on("close", (code) => {
     if (code === 0) {
       res.status(200).json({ message: "Conversion successful" });

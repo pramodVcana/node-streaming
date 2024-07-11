@@ -36,7 +36,7 @@ app.post("/api/convert/rmtp", (req, res) => {
     return res.status(400).json({ error: "Missing RTMP or RTSP URL" });
   } 
 
-  const ffmpegCommand = `${ffmpegPath} -i ${rtmpUrl} -c:v copy -c:a copy -f rtsp ${rtspUrl}`;
+  const ffmpegCommand = `ffmpeg -i ${rtmpUrl} -c:v copy -c:a copy -f rtsp ${rtspUrl}`;
 
   const process = exec(ffmpegCommand);
 
@@ -87,7 +87,7 @@ app.post("/api/convert/rstp", (req, res) => {
     return res.status(400).json({ error: "Missing RTMP or RTSP URL" });
   }
 
-  const ffmpegCommand = `${ffmpegPath} -loglevel debug -rtsp_transport tcp -i ${rtspUrl} -c:v copy -c:a copy -f flv ${rtmpUrl}`;
+  const ffmpegCommand = `ffmpeg -loglevel debug -rtsp_transport tcp -i ${rtspUrl} -c:v copy -c:a copy -f flv ${rtmpUrl}`;
 
 
 const config = {
@@ -106,7 +106,8 @@ const config = {
     allow_origin: "*",
   },
   trans: {
-    ffmpeg: "C:/ffmpeg/bin/ffmpeg.exe", // Update this to the path where ffmpeg is installed on your system
+    // ffmpeg: "C:/ffmpeg/bin/ffmpeg.exe", // Update this to the path where ffmpeg is installed on your system
+    ffmpeg:"/usr/bin/ffmpeg",
     tasks: [
       {
         app: "live",

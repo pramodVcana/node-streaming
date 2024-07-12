@@ -51,7 +51,7 @@ const ffmpegCommand = `ffmpeg -i ${rtmpUrl} -c:v copy -c:a copy -f rtsp -rtsp_tr
   const options = {
     name: "streamName",
     url: "rtsp://35.170.208.165:8554/live",
-    // wsPort:3005
+    port:8554
   };
    
   const stream = new Stream(options);

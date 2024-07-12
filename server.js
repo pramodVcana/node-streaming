@@ -20,7 +20,7 @@ app.use(cors());
 
 let port = 3000
 
-rtmp: app.post("/api/convert/rmtp", (req, res) => {
+ app.post("/api/convert/rmtp", (req, res) => {
   const { rtmpUrl, rtspUrl } = req.body;
 
   if (!rtmpUrl || !rtspUrl) {
@@ -33,7 +33,7 @@ rtmp: app.post("/api/convert/rmtp", (req, res) => {
 
   let errorData = "";
 
-  process.stderr.on("data", (data) => {
+  process.stderr.on("data", (data) => { 
     console.error(`stderr: ${data}`);
     errorData += data;
     // res.status(200).json({ message: "Conversion successful", data });
@@ -44,7 +44,7 @@ rtmp: app.post("/api/convert/rmtp", (req, res) => {
     //  res.status(200).json({ message: "Conversion successful",data });
   });
 
-  
+ 
 
   const options = {
     name: "streamName",
@@ -52,8 +52,11 @@ rtmp: app.post("/api/convert/rmtp", (req, res) => {
     wsPort: port,
   };
 
-  port = port + 1;
+  port = port+1
+
   const stream = new Stream(options);
+
+  stream.stop()
 
   stream.start();
   res.status(200).json({ message: "Conversion successful" });

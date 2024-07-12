@@ -27,7 +27,7 @@ app.post("/api/convert/rmtp", (req, res) => {
     return res.status(400).json({ error: "Missing RTMP or RTSP URL" });
   } 
 
-const ffmpegCommand = `ffmpeg -i ${rtmpUrl} -c:v copy -c:a copy -f rtsp -rtsp_transport tcp -loglevel debug ${rtspUrl}`;
+const ffmpegCommand = `ffmpeg -i ${rtmpUrl} -c:v copy -c:a copy -f rtsp -rtsp_transport tcp -loglevel debug rtsp://35.170.208.165:8554/live`;
 
   const process = exec(ffmpegCommand);
 
@@ -50,7 +50,7 @@ const ffmpegCommand = `ffmpeg -i ${rtmpUrl} -c:v copy -c:a copy -f rtsp -rtsp_tr
 
   const options = {
     name: "streamName",
-    url: "rtsp://admin:admin1234@122.160.201.111:16000",
+    url: "rtsp://35.170.208.165:8554/live",
     wsPort: 3005,
   };
    

@@ -21,6 +21,10 @@ app.use(cors());
 let port = 3000
 
  app.post("/api/convert/rmtp", (req, res) => {
+
+  port = port +1
+
+  
   const { rtmpUrl, rtspUrl } = req.body;
 
   if (!rtmpUrl || !rtspUrl) {
@@ -52,7 +56,7 @@ let port = 3000
     wsPort: port,
   };
 
-  port = port+1
+
 
   const stream = new Stream(options);
 

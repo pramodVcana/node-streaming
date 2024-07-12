@@ -7,27 +7,18 @@ const ffmpegPath = require("ffmpeg-static");
 
 const cors = require("cors");
 const httpProxy = require("express-http-proxy");
-const NodeMediaServer = require("node-media-server");
+const NodeMediaServer = require("node-media-server");const rtsp = require("node-rtsp-stream");
+
+
+
+const path = require("path")
 
 
 const app = express();
 app.use(bodyParser.json());
 app.use(cors());
 
-// app.use(
-//   "/ws",
-//   httpProxy("localhost:9999", {
-//     proxyReqPathResolver: (req) => {
-//       return "/ws" + req.url;
-//     },
-//     userResHeaderDecorator(headers, userReq, userRes, proxyReq, proxyRes) {
-//       headers["Access-Control-Allow-Origin"] = "*";
-//       headers["Access-Control-Allow-Headers"] =
-//         "Origin, X-Requested-With, Content-Type, Accept";
-//       return headers;
-//     },
-//   })
-// );
+
 
 app.post("/api/convert/rmtp", (req, res) => {
   const { rtmpUrl, rtspUrl } = req.body;
@@ -36,7 +27,7 @@ app.post("/api/convert/rmtp", (req, res) => {
     return res.status(400).json({ error: "Missing RTMP or RTSP URL" });
   } 
 
-  const ffmpegCommand = `ffmpeg -i ${rtmpUrl} -c:v copy -c:a copy -f rtsp ${rtspUrl}`;
+const ffmpegCommand = `ffmpeg -i ${rtmpUrl} -c:v copy -c:a copy -f rtsp -rtsp_transport tcp -loglevel debug ${rtspUrl}`;
 
   const process = exec(ffmpegCommand);
 
@@ -53,23 +44,16 @@ app.post("/api/convert/rmtp", (req, res) => {
     //  res.status(200).json({ message: "Conversion successful",data });
   });
 
-  process.on("close", (code) => {
-    if (code === 0) {
-      res.status(200).json({ message: "Conversion successful" });
-    } else {
-      res.status(500).json({ error: "Conversion failed", details: errorData });
-    }
-  });
 
 
 
 
   const options = {
     name: "streamName",
-    url: rtspUrl,
-    wsPort: 9999,
+    url: "rtsp://admin:admin1234@122.160.201.111:16000",
+    wsPort: 3005,
   };
-  
+   
   const stream = new Stream(options);
   
   stream.start();
@@ -142,16 +126,16 @@ process.on("close", (code) => {
   console.log(`FFmpeg process exited with code ${code}`);
 });
     // if (error) throw error;
-  process.on("close", (code) => {
-    if (code === 0) {
-      res.status(200).json({ message: "Conversion successful" });
-    } else {
-      res.status(500).json({ error: "Conversion failed", details: code });
-    } 
-  });
+
 
   res.status(200).json({ error: "Conversion Success", });
 });
+
+
+app.use(express.static(path.join(__dirname, "public")));
+
+
+
 
 const PORT = 5000;
 app.listen(PORT, () => {

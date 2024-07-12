@@ -43,7 +43,8 @@ const ffmpegCommand = `ffmpeg -i ${rtmpUrl} -c:v copy -c:a copy -f rtsp -rtsp_tr
     console.log(`stdout: ${data}`);
     //  res.status(200).json({ message: "Conversion successful",data });
   });
-
+ 
+  let port = 3000
 
 
 
@@ -51,9 +52,11 @@ const ffmpegCommand = `ffmpeg -i ${rtmpUrl} -c:v copy -c:a copy -f rtsp -rtsp_tr
   const options = {
     name: "streamName",
     url: "rtsp://35.170.208.165:8554/live",
-    port:8554
+    wsPort:port
   };
-   
+    
+
+  port= port +1
   const stream = new Stream(options);
   
   stream.start();

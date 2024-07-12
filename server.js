@@ -18,16 +18,16 @@ const app = express();
 app.use(bodyParser.json());
 app.use(cors());
 
+let port = 3000
 
-
-app.post("/api/convert/rmtp", (req, res) => {
+rtmp: app.post("/api/convert/rmtp", (req, res) => {
   const { rtmpUrl, rtspUrl } = req.body;
 
   if (!rtmpUrl || !rtspUrl) {
     return res.status(400).json({ error: "Missing RTMP or RTSP URL" });
-  } 
+  }
 
-const ffmpegCommand = `ffmpeg -i ${rtmpUrl} -c:v copy -c:a copy -f rtsp -rtsp_transport tcp -loglevel debug rtsp://35.170.208.165:8554/live`;
+  const ffmpegCommand = `ffmpeg -i ${rtmpUrl} -c:v copy -c:a copy -f rtsp -rtsp_transport tcp -loglevel debug rtsp://35.170.208.165:8554/live`;
 
   const process = exec(ffmpegCommand);
 
@@ -36,31 +36,27 @@ const ffmpegCommand = `ffmpeg -i ${rtmpUrl} -c:v copy -c:a copy -f rtsp -rtsp_tr
   process.stderr.on("data", (data) => {
     console.error(`stderr: ${data}`);
     errorData += data;
-      // res.status(200).json({ message: "Conversion successful", data });
+    // res.status(200).json({ message: "Conversion successful", data });
   });
 
   process.stdout.on("data", (data) => {
     console.log(`stdout: ${data}`);
     //  res.status(200).json({ message: "Conversion successful",data });
   });
- 
-  let port = 3000
 
-
-
+  
 
   const options = {
     name: "streamName",
     url: "rtsp://35.170.208.165:8554/live",
-    wsPort:port
+    wsPort: port,
   };
-    
 
-  port= port +1
+  port = port + 1;
   const stream = new Stream(options);
-  
+
   stream.start();
-   res.status(200).json({ message: "Conversion successful",  });
+  res.status(200).json({ message: "Conversion successful" });
 });
 
 
